@@ -82,8 +82,9 @@ Don't forget to open a PR. I'm pleased to accept it!
 - Logs are stored in the `logs` directory.
 - The Builder pattern is used for environment configuration.
 - The Factory Method pattern is used to add new provider.
-- The code is well-documented
+- The code is well-documented.
  
 ## License
 MIT License.
+
 This version emphasizes the generic nature of the solution and provides clear instructions on how to extend it with new providers. It also clarifies the configuration process and expected output in a more general way.
