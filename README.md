@@ -55,24 +55,24 @@ The script is designed to be easily extensible. To add support for a new provide
 2. Create a corresponding `ProviderCreator` class (inheriting from `factories/providers/creators.py`) to create instances of your new provider class.
 3. Update the `main.py` to recognize your new provider name.
 4. Create a new `EnvironmentBuilder` for the provider if it requires different configuration settings.
-Don't forget to open a PR. I'm glad to accept it!
+Don't forget to open a PR. I'm pleased to accept it!
 
 ## Expected Output
 1. Record not found:
 ```
-[YYYY-MM-DD HH:MM:SS] - ERROR: Record 'your_record_name' not found.
+[YYYY-MM-DD HH:MM:SS] - ERROR: Record '<record_name>' not found.
 ```
 2. IP changed:
 ```
-[YYYY-MM-DD HH:MM:SS] - INFO: Record update successful for your_record_name.
+[YYYY-MM-DD HH:MM:SS] - INFO: Record updated successful for '<record_name>'.
 ```
 3. IP same:
 ```
-[YYYY-MM-DD HH:MM:SS] - INFO: Record not updated for your_record_name because hasn't changed.
+[YYYY-MM-DD HH:MM:SS] - INFO: Record not updated for '<record_name>' because hasn't changed.
 ```
 4. Update failed:
 ```
-[YYYY-MM-DD HH:MM:SS] - ERROR: Record update failed with these reasons: ['Error message'].
+[YYYY-MM-DD HH:MM:SS] - ERROR: Record update failed for '<record_name>' with these reasons: ['Error message'].
 ```
 
 ## Notes
