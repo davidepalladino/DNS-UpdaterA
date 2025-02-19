@@ -11,15 +11,14 @@ class Environment(ABC):
     """
     _record_name: str
 
-    @abstractmethod
-    def get_record_name(self):
+    def get_record_name(self) -> str:
         """
-        Abstract method to retrieve the DNS record name.
+        Returns the name of the DNS record.
 
         Returns:
-            The DNS record name as a string.
+            The name of the DNS record.
         """
-        pass
+        return self._record_name
 
 
 class CloudflareEnvironment(Environment):
@@ -49,15 +48,6 @@ class CloudflareEnvironment(Environment):
         self._zone_id = zone_id
         self._email = email
         self._api_key = api_key
-
-    def get_record_name(self) -> str:
-        """
-        Returns the name of the DNS record.
-
-        Returns:
-            The name of the DNS record.
-        """
-        return self._record_name
 
     def get_zone_id(self) -> str:
         """
