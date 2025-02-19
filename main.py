@@ -5,7 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 from builders.environments.director import EnvironmentDirector
 from consts.arguments import ARG_PROVIDER
-from factories.providers.creators import CloudflareProviderCreator
+from factories.providers.creators import CloudflareProviderCreator, OvhProviderCreator
 from utils.logger import *
 
 
@@ -67,14 +67,24 @@ if __name__ == '__main__':
 
     try:
         provider = get_provider(args)
+
+        director = EnvironmentDirector()
+
+        environment = None
+        creator = None
+
         if provider == "cloudflare":
-            director = EnvironmentDirector()
             environment = director.make_cloudflare_environment(args)
-
             creator = CloudflareProviderCreator(environment.get_zone_id(), environment.get_email(), environment.get_api_key())
-            update_result = creator.updateIfChanged(environment.get_record_name())
+        elif provider == "ovh":
+            environment = director.make_ovh_environment(args)
+            creator = OvhProviderCreator(environment.get_endpoint(), environment.get_application_key(), environment.get_application_secret(), environment.get_consumer_key())
+        else:
+            raise Exception(f"You must provide a valid provider to update, or {provider} is not covered yet.")
 
-            Logger.info(update_result.get_reason())
+        update_result = creator.updateIfChanged(environment.get_record_name())
+        Logger.info(update_result.get_reason())
+
     except Exception as error:
         Logger.error(error.__str__())
         exit(1)
