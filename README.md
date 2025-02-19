@@ -59,7 +59,9 @@ The script is designed to be easily extensible. To add support for a new provide
 2. Create a corresponding `ProviderCreator` class (inheriting from `factories/providers/creators.py`) to create instances of your new provider class.
 3. Update the `main.py` to recognize your new provider name.
 4. Create a new `EnvironmentBuilder` for the provider if it requires different configuration settings.
-Don't forget to open a PR. I'm pleased to accept it!
+
+Be free to open feature or bugfix branch, then a PR; I'm pleased to accept it!
+I suggest you to use [git-flow](https://danielkummer.github.io/git-flow-cheatsheet/).
 
 ## Expected Output
 1. Record not found:
