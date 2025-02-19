@@ -53,14 +53,14 @@ CLOUDFLARE_API_KEY=your_cloudflare_api_key
 OVH_ENDPOINT=your_endpoint
 OVH_APPLICATION_KEY=your_application_key
 OVH_APPLICATION_SECRET=your_application_secret
-OVH_CUSTOMER_KEY=your_customer_key
+OVH_CONSUMER_KEY=your_consumer_key
 ```
 - `OVH_ENDPOINT`: Your OVH endpoint. [This is a list](https://github.com/ovh/python-ovh#2-configure-your-application) of available endpoints.
 - `OVH_APPLICATION_KEY`: Your OVH Application key.
 - `OVH_APPLICATION_SECRET`: Your OVH Application secret.
-- `OVH_CUSTOMER_KEY`: Your OVH Customer key.
+- `OVH_CONSUMER_KEY`: Your OVH Consumer key.
 
-These `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET and `OVH_CUSTOMER_KEY` could be created by [creation page](https://api.ovh.com/createToken/index.cgi?GET=/*&PUT=/*&POST=/*&DELETE=/*).
+These `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET and `OVH_CONSUMER_KEY` could be created by [creation page](https://api.ovh.com/createToken/index.cgi?GET=/*&PUT=/*&POST=/*&DELETE=/*).
 
 ## Usage
 Run the script, specifying the provider and record name:
