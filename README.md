@@ -1,6 +1,6 @@
 # DNS-UpdaterA
 This script provides a framework for managing DNS records across different providers. It's designed:
-- to be Docker-less.
+- to be Docker-less, this is useful to have a lightweight solution.
 - with a modular architecture that allows you to easily add support for new DNS providers.
 
 The current implementation includes support for Cloudflare.
@@ -20,13 +20,14 @@ The current implementation includes support for Cloudflare.
     - `python-dotenv`
     - `logging`
     - `typing`
+    - `ovh`
 
 ## Installation 
 1. Clone or download this repository.
 2. Install the required Python dependencies using `pip`:
 
 ```bash
-pip install requests python-dotenv
+pip install requests python-dotenv ovh
 ```
 or
 ```bash
@@ -47,6 +48,20 @@ CLOUDFLARE_API_KEY=your_cloudflare_api_key
 - `CLOUDFLARE_EMAIL`: Your Cloudflare account email.
 - `CLOUDFLARE_API_KEY`: Your Cloudflare API key.
 
+#### OVH Configuration
+```env
+OVH_ENDPOINT=your_endpoint
+OVH_APPLICATION_KEY=your_application_key
+OVH_APPLICATION_SECRET=your_application_secret
+OVH_CONSUMER_KEY=your_consumer_key
+```
+- `OVH_ENDPOINT`: Your OVH endpoint. [This is a list](https://github.com/ovh/python-ovh#2-configure-your-application) of available endpoints.
+- `OVH_APPLICATION_KEY`: Your OVH Application key.
+- `OVH_APPLICATION_SECRET`: Your OVH Application secret.
+- `OVH_CONSUMER_KEY`: Your OVH Consumer key.
+
+These `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET and `OVH_CONSUMER_KEY` could be created by [creation page](https://api.ovh.com/createToken/index.cgi?GET=/*&PUT=/*&POST=/*&DELETE=/*).
+
 ## Usage
 Run the script, specifying the provider and record name:
 ```bash
@@ -59,7 +74,9 @@ The script is designed to be easily extensible. To add support for a new provide
 2. Create a corresponding `ProviderCreator` class (inheriting from `factories/providers/creators.py`) to create instances of your new provider class.
 3. Update the `main.py` to recognize your new provider name.
 4. Create a new `EnvironmentBuilder` for the provider if it requires different configuration settings.
-Don't forget to open a PR. I'm pleased to accept it!
+
+Be free to open feature or bugfix branch, then a PR; I'm pleased to accept it!
+I suggest you to use [git-flow](https://danielkummer.github.io/git-flow-cheatsheet/).
 
 ## Expected Output
 1. Record not found:

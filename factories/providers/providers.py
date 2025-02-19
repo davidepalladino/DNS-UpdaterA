@@ -5,6 +5,9 @@ import json
 
 from abc import ABC, abstractmethod
 from typing import Union
+
+from ovh import Client
+
 from factories.providers.dtos import RecordDTO
 
 
@@ -29,12 +32,12 @@ class Provider(ABC):
         pass
 
     @abstractmethod
-    def update(self, id: str, ip: str) -> str:
+    def update(self, record: RecordDTO, ip: str) -> list[str]:
         """
         Updates a DNS record with a new IP address.
 
         Args:
-            id: The ID of the DNS record to update.
+            record: The DNS record to update.
             ip: The new IP address to set for the DNS record.
 
         Returns:
@@ -94,12 +97,12 @@ class CloudflareProvider(Provider):
         except IndexError:
             return None
 
-    def update(self, id: str, ip: str) -> list[str]:
+    def update(self, record: RecordDTO, ip: str) -> list[str]:
         """
         Updates a DNS record with a new IP address in the Cloudflare zone.
 
         Args:
-            id: The ID of the DNS record to update.
+            record: The DNS record to update.
             ip: The new IP address to set for the DNS record.
 
         Returns:
@@ -109,7 +112,7 @@ class CloudflareProvider(Provider):
         body = "{\n \"content\": \"" + ip + "\" \n}"
         self._connection.request(
             method="PATCH",
-            url=f"/client/v4/zones/{self._zone_id}/dns_records/{id}",
+            url=f"/client/v4/zones/{self._zone_id}/dns_records/{record.get_id()}",
             body=body,
             headers=self._headers
         )
@@ -118,3 +121,101 @@ class CloudflareProvider(Provider):
         data = json.loads(result.read().decode("utf-8"))
 
         return data['errors']
+
+class OvhProvider(Provider):
+    """
+    A concrete implementation of the Provider interface for interacting
+    with the OVH API.
+    """
+    _client: Client
+
+    def __init__(self, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+        """
+        Initializes an OvhProvider instance.
+
+        Args:
+            endpoint: The OVH API endpoint.
+            application_key: The OVH application key.
+            application_secret: The OVH application secret.
+            consumer_key: The OVH consumer key.
+        """
+        self._client = Client(
+            endpoint=endpoint,
+            application_key=application_key,
+            application_secret=application_secret,
+            consumer_key=consumer_key
+        )
+
+    def get(self, name: str) -> Union[RecordDTO, None]:
+        """
+        Retrieves a DNS record by name from the OVH zone.
+
+        Args:
+            name: The name of the DNS record to retrieve.
+
+        Returns:
+            A `RecordDTO` object representing the DNS record if found,
+            otherwise `None`.
+        """
+        zone_dns = self._get_zone_dns(name)
+        subdomain = self._get_subdomain(name)
+
+        record_id = self._client.get(f"/v1/domain/zone/{zone_dns}/record?fieldType=A&subDomain={subdomain}")
+        if record_id is not None and len(record_id) > 0:
+            record = self._client.get(f"/v1/domain/zone/{zone_dns}/record/{record_id[0]}")
+            return RecordDTO(record_id[0], name, record['target'])
+        else:
+            return None
+
+    def update(self, record: RecordDTO, ip: str) -> list[str]:
+        """
+        Updates a DNS record with a new IP address in the OVH zone.
+
+        Args:
+            record: The `RecordDTO` object representing the DNS record to update.
+            ip: The new IP address to set for the DNS record.
+
+        Returns:
+            A list of strings. It will be an empty list if the update is successful.
+            Otherwise, it will be a list containing an error message.
+        """
+        zone_dns = self._get_zone_dns(record.get_name())
+        subdomain = self._get_subdomain(record.get_name())
+
+        self._client.put(
+            f"/v1/domain/zone/{zone_dns}/record/{record.get_id()}",
+            subDomain=subdomain,
+            target=ip
+        )
+
+        return []
+
+    def _get_zone_dns(self, name: str) -> str:
+        """
+        Extracts the zone DNS from the given name.
+
+        Args:
+            name: The full DNS record name (e.g., "sub.example.com").
+
+        Returns:
+            The zone DNS (e.g., "example.com").
+        """
+        split_name = name.split('.')
+        if len(split_name) > 2:
+            return ".".join(split_name[-2:])
+        return ".".join(split_name)
+
+    def _get_subdomain(self, name: str) -> str:
+        """
+        Extracts the subdomain from the given name.
+
+        Args:
+            name: The full DNS record name (e.g., "sub.example.com").
+
+        Returns:
+            The subdomain (e.g., "sub").  Returns an empty string if there is no subdomain.
+        """
+        split_name = name.split('.')
+        if len(split_name) > 2:
+            return ".".join(split_name[:-2])
+        return ""
