@@ -115,6 +115,11 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
 
 
 class OvhEnvironmentBuilder(EnvironmentBuilder):
+    """
+    Concrete implementation of EnvironmentBuilder for creating
+    OvhEnvironment instances.
+    """
+
     _endpoint: str
     _application_key: str
     _application_secret: str
@@ -125,7 +130,7 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
         Sets the authentication details from environment variables.
 
         Returns:
-            The builder instance (self) to allow method chaining.
+            The builder instance (self) for method chaining.
 
         Raises:
             EnvironmentError: If required environment variables are not set.
@@ -154,4 +159,10 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
             raise EnvironmentError(f"Please set environment for: {', '.join(errors)}.")
 
     def make(self) -> OvhEnvironment:
+        """
+         Creates and returns an OvhEnvironment instance.
+
+         Returns:
+             An OvhEnvironment instance.
+         """
         return OvhEnvironment(self._record_name, self._endpoint, self._application_key, self._application_secret, self._consumer_key)
