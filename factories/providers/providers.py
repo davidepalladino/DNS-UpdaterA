@@ -29,7 +29,7 @@ class Provider(ABC):
         pass
 
     @abstractmethod
-    def update(self, record: RecordDTO, ip: str) -> str:
+    def update(self, record: RecordDTO, ip: str) -> list[str]:
         """
         Updates a DNS record with a new IP address.
 
