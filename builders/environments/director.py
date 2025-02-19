@@ -1,5 +1,5 @@
-from builders.environments.builders import CloudflareEnvironmentBuilder
-from builders.environments.environments import CloudflareEnvironment
+from builders.environments.builders import CloudflareEnvironmentBuilder, OvhEnvironmentBuilder
+from builders.environments.environments import CloudflareEnvironment, OvhEnvironment
 
 
 class EnvironmentDirector:
@@ -25,6 +25,12 @@ class EnvironmentDirector:
             EnvironmentError: If required environment variables are not set.
         """
         builder = CloudflareEnvironmentBuilder()
+        builder.set_record_name(args)
+        builder.set_authentication()
+        return builder.make()
+
+    def make_ovh_environment(self, args: list) -> OvhEnvironment:
+        builder = OvhEnvironmentBuilder()
         builder.set_record_name(args)
         builder.set_authentication()
         return builder.make()

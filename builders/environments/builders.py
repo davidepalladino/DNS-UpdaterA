@@ -3,9 +3,10 @@ import os
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
-from builders.environments.environments import CloudflareEnvironment, Environment
+from builders.environments.environments import CloudflareEnvironment, Environment, OvhEnvironment
 from consts.arguments import ARG_NAME
-from consts.environments import ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY
+from consts.environments import ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY, ENV_OVH_ENDPOINT, \
+    ENV_OVH_APPLICATION_KEY, ENV_OVH_APPLICATION_SECRET, ENV_OVH_CONSUMER_KEY
 
 
 class EnvironmentBuilder(ABC):
@@ -111,3 +112,46 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
             A CloudflareEnvironment instance.
         """
         return CloudflareEnvironment(self._record_name, self._zone_id, self._email, self._api_key)
+
+
+class OvhEnvironmentBuilder(EnvironmentBuilder):
+    _endpoint: str
+    _application_key: str
+    _application_secret: str
+    _consumer_key: str
+
+    def set_authentication(self):
+        """
+        Sets the authentication details from environment variables.
+
+        Returns:
+            The builder instance (self) to allow method chaining.
+
+        Raises:
+            EnvironmentError: If required environment variables are not set.
+        """
+        load_dotenv()
+
+        errors: list = []
+
+        self._endpoint = os.getenv(ENV_OVH_ENDPOINT)
+        if self._endpoint is None:
+            errors.append(ENV_OVH_ENDPOINT)
+
+        self._application_key = os.getenv(ENV_OVH_APPLICATION_KEY)
+        if self._application_key is None:
+            errors.append(ENV_OVH_APPLICATION_KEY)
+
+        self._application_secret = os.getenv(ENV_OVH_APPLICATION_SECRET)
+        if self._application_secret is None:
+            errors.append(ENV_OVH_APPLICATION_SECRET)
+
+        self._consumer_key = os.getenv(ENV_OVH_CONSUMER_KEY)
+        if self._consumer_key is None:
+            errors.append(ENV_OVH_CONSUMER_KEY)
+
+        if len(errors) > 0:
+            raise EnvironmentError(f"Please set environment for: {', '.join(errors)}.")
+
+    def make(self) -> OvhEnvironment:
+        return OvhEnvironment(self._record_name, self._endpoint, self._application_key, self._application_secret, self._consumer_key)

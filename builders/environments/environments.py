@@ -75,3 +75,29 @@ class CloudflareEnvironment(Environment):
             The Cloudflare API key.
         """
         return self._api_key
+
+
+class OvhEnvironment(Environment):
+    _endpoint: str
+    _application_key: str
+    _application_secret: str
+    _consumer_key: str
+
+    def __init__(self, record_name: str, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+        self._record_name = record_name
+        self._endpoint = endpoint
+        self._application_key = application_key
+        self._application_secret = application_secret
+        self._consumer_key = consumer_key
+
+    def get_endpoint(self) -> str:
+        return self._endpoint
+
+    def get_application_key(self) -> str:
+        return self._application_key
+
+    def get_application_secret(self) -> str:
+        return self._application_secret
+
+    def get_consumer_key(self) -> str:
+        return self._consumer_key
