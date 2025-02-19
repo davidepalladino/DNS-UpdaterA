@@ -20,13 +20,14 @@ The current implementation includes support for Cloudflare.
     - `python-dotenv`
     - `logging`
     - `typing`
+    - `ovh`
 
 ## Installation 
 1. Clone or download this repository.
 2. Install the required Python dependencies using `pip`:
 
 ```bash
-pip install requests python-dotenv
+pip install requests python-dotenv ovh
 ```
 or
 ```bash
