@@ -97,16 +97,36 @@ class CloudflareProviderCreator(ProviderCreator):
 
 
 class OvhProviderCreator(ProviderCreator):
+    """
+    A concrete implementation of ProviderCreator for creating
+    OvhProvider instances.
+    """
+
     endpoint: str
     application_key: str
     application_secret: str
     consumer_key: str
 
     def __init__(self, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+        """
+        Initializes an OvhProviderCreator instance.
+
+        Args:
+            endpoint: The OVH API endpoint.
+            application_key: The OVH application key.
+            application_secret: The OVH application secret.
+            consumer_key: The OVH consumer key.
+        """
         self.endpoint = endpoint
         self.application_key = application_key
         self.application_secret = application_secret
         self.consumer_key = consumer_key
 
     def _make(self) -> Provider:
+        """
+        Creates an OvhProvider instance.
+
+        Returns:
+            An OvhProvider instance.
+        """
         return OvhProvider(self.endpoint, self.application_key, self.application_secret, self.consumer_key)
