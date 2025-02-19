@@ -48,7 +48,7 @@ class ProviderCreator(ABC):
 
         public_ip = self._get_public_ip()
         if record.get_ip() != public_ip:
-            errors: list[str] = provider.update(record.get_id(), public_ip)
+            errors: list[str] = provider.update(record, public_ip)
             if len(errors) != 0:
                 raise Exception(f"Record update failed for {name} with these reasons: {errors}.")
             return ResultUpdateDTO(True, f"Record updated successful for '{name}'.")

@@ -29,12 +29,12 @@ class Provider(ABC):
         pass
 
     @abstractmethod
-    def update(self, id: str, ip: str) -> str:
+    def update(self, record: RecordDTO, ip: str) -> str:
         """
         Updates a DNS record with a new IP address.
 
         Args:
-            id: The ID of the DNS record to update.
+            record: The DNS record to update.
             ip: The new IP address to set for the DNS record.
 
         Returns:
@@ -94,12 +94,12 @@ class CloudflareProvider(Provider):
         except IndexError:
             return None
 
-    def update(self, id: str, ip: str) -> list[str]:
+    def update(self, record: RecordDTO, ip: str) -> list[str]:
         """
         Updates a DNS record with a new IP address in the Cloudflare zone.
 
         Args:
-            id: The ID of the DNS record to update.
+            record: The DNS record to update.
             ip: The new IP address to set for the DNS record.
 
         Returns:
@@ -109,7 +109,7 @@ class CloudflareProvider(Provider):
         body = "{\n \"content\": \"" + ip + "\" \n}"
         self._connection.request(
             method="PATCH",
-            url=f"/client/v4/zones/{self._zone_id}/dns_records/{id}",
+            url=f"/client/v4/zones/{self._zone_id}/dns_records/{record.get_id()}",
             body=body,
             headers=self._headers
         )
