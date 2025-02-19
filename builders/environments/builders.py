@@ -16,7 +16,6 @@ class EnvironmentBuilder(ABC):
 
     _record_name: str
 
-    @abstractmethod
     def set_record_name(self, args: list):
         """
         Sets the record name from command-line arguments.
@@ -30,7 +29,15 @@ class EnvironmentBuilder(ABC):
         Raises:
             ValueError: If the record name argument is missing or invalid.
         """
-        pass
+        try:
+            if ARG_NAME in args:
+                self._record_name = args[args.index(ARG_NAME) + 1].lower()
+                if self._record_name.startswith("--"):
+                    raise Exception(f"'{self._record_name}' is not allowed for '{ARG_NAME}' argument.")
+            else:
+                raise Exception("You must provide a record name to update.")
+        except IndexError:
+            raise Exception("You must provide a record name to update.")
 
     @abstractmethod
     def set_authentication(self):
@@ -66,29 +73,6 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
     _zone_id = None
     _email = None
     _api_key = None
-
-    def set_record_name(self, args: list):
-        """
-        Sets the record name from command-line arguments.
-
-        Args:
-            args: A list of command-line arguments.
-
-        Returns:
-            The builder instance (self) to allow method chaining.
-
-        Raises:
-            ValueError: If the record name argument is missing or invalid.
-        """
-        try:
-            if ARG_NAME in args:
-                self._record_name = args[args.index(ARG_NAME) + 1].lower()
-                if self._record_name.startswith("--"):
-                    raise Exception(f"'{self._record_name}' is not allowed for '{ARG_NAME}' argument.")
-            else:
-                raise Exception("You must provide a record name to update.")
-        except IndexError:
-            raise Exception("You must provide a record name to update.")
 
     def set_authentication(self):
         """
