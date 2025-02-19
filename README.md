@@ -1,5 +1,9 @@
 # DNS-UpdaterA
-This script provides a framework for managing DNS records across different providers. It's designed with a modular architecture that allows you to easily add support for new DNS providers. The current implementation includes support for Cloudflare.
+This script provides a framework for managing DNS records across different providers. It's designed:
+- to be Docker-less.
+- with a modular architecture that allows you to easily add support for new DNS providers.
+
+The current implementation includes support for Cloudflare.
 
 ## Features
 - **Provider-Agnostic Design:** The core logic for fetching the public IP and updating DNS records is abstracted, allowing easy integration with various DNS providers.
