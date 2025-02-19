@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 
 from factories.providers.dtos import ResultUpdateDTO
-from factories.providers.providers import Provider, CloudflareProvider
+from factories.providers.providers import Provider, CloudflareProvider, OvhProvider
 from requests import get
 
 
@@ -94,3 +94,19 @@ class CloudflareProviderCreator(ProviderCreator):
 
     def _make(self) -> Provider:
         return CloudflareProvider(self._zone_id, self._email, self._api_key)
+
+
+class OvhProviderCreator(ProviderCreator):
+    endpoint: str
+    application_key: str
+    application_secret: str
+    consumer_key: str
+
+    def __init__(self, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+        self.endpoint = endpoint
+        self.application_key = application_key
+        self.application_secret = application_secret
+        self.consumer_key = consumer_key
+
+    def _make(self) -> Provider:
+        return OvhProvider(self.endpoint, self.application_key, self.application_secret, self.consumer_key)

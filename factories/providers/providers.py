@@ -5,6 +5,9 @@ import json
 
 from abc import ABC, abstractmethod
 from typing import Union
+
+from ovh import Client
+
 from factories.providers.dtos import RecordDTO
 
 
@@ -118,3 +121,49 @@ class CloudflareProvider(Provider):
         data = json.loads(result.read().decode("utf-8"))
 
         return data['errors']
+
+class OvhProvider(Provider):
+    _client: Client
+
+    def __init__(self, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+        self._client = Client(
+            endpoint=endpoint,
+            application_key=application_key,
+            application_secret=application_secret,
+            consumer_key=consumer_key
+        )
+
+    def get(self, name: str) -> Union[RecordDTO, None]:
+        zone_dns = self._get_zone_dns(name)
+        subdomain = self._get_subdomain(name)
+
+        record_id = self._client.get(f"/v1/domain/zone/{zone_dns}/record?fieldType=A&subDomain={subdomain}")
+        if record_id is not None and len(record_id) > 0:
+            record = self._client.get(f"/v1/domain/zone/{zone_dns}/record/{record_id[0]}")
+            return RecordDTO(record_id[0], name, record['target'])
+        else:
+            return None
+
+    def update(self, record: RecordDTO, ip: str) -> list[str]:
+        zone_dns = self._get_zone_dns(record.get_name())
+        subdomain = self._get_subdomain(record.get_name())
+
+        self._client.put(
+            f"/v1/domain/zone/{zone_dns}/record/{record.get_id()}",
+            subDomain=subdomain,
+            target=ip
+        )
+
+        return []
+
+    def _get_zone_dns(self, name: str) -> str:
+        split_name = name.split('.')
+        if len(split_name) > 2:
+            return ".".join(split_name[-2:])
+        return ".".join(split_name)
+
+    def _get_subdomain(self, name: str) -> str:
+        split_name = name.split('.')
+        if len(split_name) > 2:
+            return ".".join(split_name[:-2])
+        return ""
