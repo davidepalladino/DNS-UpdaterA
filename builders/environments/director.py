@@ -30,6 +30,18 @@ class EnvironmentDirector:
         return builder.make()
 
     def make_ovh_environment(self, args: list) -> OvhEnvironment:
+        """
+        Constructs an OvhEnvironment object.
+
+        Args:
+            args: A list of command-line arguments (potentially used for record name).
+
+        Returns:
+            An OvhEnvironment instance.
+
+        Raises:
+            EnvironmentError: If required environment variables are not set.
+        """
         builder = OvhEnvironmentBuilder()
         builder.set_record_name(args)
         builder.set_authentication()
