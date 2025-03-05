@@ -16,7 +16,9 @@ def set_logger():
     Creates a log directory if it doesn't exist and configures a timed rotating
     file handler to log messages to a file named 'main' in the logs directory.
     """
-    exec_path = sys.argv[0].removesuffix("/main.py")
+    exec_path = "./"
+    if "/" in sys.argv[0]:
+        exec_path = sys.argv[0].removesuffix("main.py")
 
     log_path = f"{exec_path}/logs"
     if not os.path.exists(log_path):
