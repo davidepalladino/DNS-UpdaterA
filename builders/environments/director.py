@@ -26,7 +26,7 @@ class EnvironmentDirector:
         """
         builder = CloudflareEnvironmentBuilder()
         builder.set_record_name(args)
-        builder.set_authentication()
+        builder.set_authentication(args)
         return builder.make()
 
     def make_ovh_environment(self, args: list) -> OvhEnvironment:
@@ -44,5 +44,5 @@ class EnvironmentDirector:
         """
         builder = OvhEnvironmentBuilder()
         builder.set_record_name(args)
-        builder.set_authentication()
+        builder.set_authentication(args)
         return builder.make()

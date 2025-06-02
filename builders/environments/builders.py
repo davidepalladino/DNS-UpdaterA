@@ -41,15 +41,19 @@ class EnvironmentBuilder(ABC):
             raise Exception("You must provide a record name to update.")
 
     @abstractmethod
-    def set_authentication(self):
+    def set_authentication(self, args: list):
         """
-        Sets the authentication details from environment variables.
+        Defines an abstract method for setting authentication, which should be
+        implemented by any concrete subclass. This method is responsible for
+        configuring the necessary authentication mechanism based on the input
+        parameters.
+
+        Args:
+            args (list): A list containing authentication-related parameters
+            required for setting up the authentication mechanism.
 
         Returns:
-            The builder instance (self) to allow method chaining.
-
-        Raises:
-            EnvironmentError: If required environment variables are not set.
+            None
         """
         pass
 
@@ -75,15 +79,25 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
     _email = None
     _api_key = None
 
-    def set_authentication(self):
+    def set_authentication(self, args: list):
         """
-        Sets the authentication details from environment variables.
+        Sets authentication details by loading environment variables and arguments.
 
-        Returns:
-            The builder instance (self) to allow method chaining.
+        This method attempts to retrieve the necessary authentication details for a
+        Cloudflare integration using a combination of runtime arguments and environment
+        variables. It prioritizes runtime arguments for the zone ID if provided. 
+        Otherwise, it falls back to predefined environmental variables. If any of the 
+        required details are missing, an exception is raised with information about the 
+        missing variables.
+
+        Args:
+            args: list
+                A list of arguments to extract authentication details.
 
         Raises:
-            EnvironmentError: If required environment variables are not set.
+            EnvironmentError
+                If any required variables (zone ID, email, or API key) are not set 
+                in the environment or runtime arguments.
         """
         load_dotenv()
 
@@ -125,15 +139,24 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
     _application_secret: str
     _consumer_key: str
 
-    def set_authentication(self):
+    def set_authentication(self, args: list):
         """
-        Sets the authentication details from environment variables.
+        Sets the authentication for the application by loading required environment
+        variables. This method validates the presence of mandatory environment variables
+        and raises an exception if any of them are missing.
 
-        Returns:
-            The builder instance (self) for method chaining.
+        Raises
+        ------
+        EnvironmentError
+            Indicates that required environment variables are not set. A list of the
+            missing variables is provided in the error message.
 
-        Raises:
-            EnvironmentError: If required environment variables are not set.
+        Parameters
+        ----------
+        args : list
+            A list of arguments. Note: This parameter is not utilized in the function
+            but may be reserved for future use or required to match a specific method
+            signature.
         """
         load_dotenv()
 
