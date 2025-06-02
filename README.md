@@ -48,6 +48,8 @@ CLOUDFLARE_API_KEY=your_cloudflare_api_key
 - `CLOUDFLARE_EMAIL`: Your Cloudflare account email.
 - `CLOUDFLARE_API_KEY`: Your Cloudflare API key.
 
+**Note**: `CLOUDFLARE_ZONE_ID` can be passed as the argument `zone-id`. In this case, it takes priority over the environment variable."
+
 #### OVH Configuration
 ```env
 OVH_ENDPOINT=your_endpoint
@@ -65,7 +67,7 @@ These `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET and `OVH_CONSUMER_KEY` coul
 ## Usage
 Run the script, specifying the provider and record name:
 ```bash
-python main.py --provider <provider> --name <record_name>
+python main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
 ```
 
 ## Adding New Providers (for developers)
