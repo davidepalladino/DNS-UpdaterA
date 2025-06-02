@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
 from builders.environments.environments import CloudflareEnvironment, Environment, OvhEnvironment
-from consts.arguments import ARG_NAME
+from consts.arguments import ARG_NAME, ARG_CLOUDFLARE_ZONE_ID
 from consts.environments import ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY, ENV_OVH_ENDPOINT, \
     ENV_OVH_APPLICATION_KEY, ENV_OVH_APPLICATION_SECRET, ENV_OVH_CONSUMER_KEY
 
@@ -126,7 +126,13 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
 
         errors: list = []
 
-        self._zone_id = os.getenv(ENV_CLOUDFLARE_ZONE_ID)
+        if ARG_CLOUDFLARE_ZONE_ID in args:
+            try:
+                self._zone_id = self._get_arg(args, ARG_CLOUDFLARE_ZONE_ID)
+            except IndexError:
+                raise Exception("You must provide a valid Cloudflare Zone ID.")
+        else:
+            self._zone_id = os.getenv(ENV_CLOUDFLARE_ZONE_ID)
         if self._zone_id is None:
             errors.append(ENV_CLOUDFLARE_ZONE_ID)
 
