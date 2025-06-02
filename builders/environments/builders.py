@@ -32,13 +32,36 @@ class EnvironmentBuilder(ABC):
         """
         try:
             if ARG_NAME in args:
-                self._record_name = args[args.index(ARG_NAME) + 1].lower()
-                if self._record_name.startswith("--"):
-                    raise Exception(f"'{self._record_name}' is not allowed for '{ARG_NAME}' argument.")
+                self._record_name = self._get_arg(args, ARG_NAME)
             else:
                 raise Exception("You must provide a record name to update.")
         except IndexError:
             raise Exception("You must provide a record name to update.")
+
+    def _get_arg(self, args: list, arg: str) -> str:
+        """
+        Retrieves the value of a specific argument from a list of arguments. Checks if the argument
+        is prefixed with "--" and raises an exception if it is. Returns the lowercased value of the
+        specified argument.
+
+        Parameters:
+        args: list
+            A list of arguments to process.
+        arg: str
+            The specific argument to locate and retrieve its associated value.
+
+        Raises:
+        Exception
+            If the specified argument starts with "--".
+
+        Returns:
+        str
+            The lowercased value associated with the specified argument.
+        """
+        value: str = args[args.index(arg) + 1].lower()
+        if arg.startswith("--"):
+            raise Exception(f"'{value}' is not allowed for '{arg}' argument.")
+        return value
 
     @abstractmethod
     def set_authentication(self, args: list):
