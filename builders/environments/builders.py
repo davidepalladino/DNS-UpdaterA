@@ -59,7 +59,7 @@ class EnvironmentBuilder(ABC):
             The lowercased value associated with the specified argument.
         """
         value: str = args[args.index(arg) + 1].lower()
-        if arg.startswith("--"):
+        if value.startswith("--"):
             raise Exception(f"'{value}' is not allowed for '{arg}' argument.")
         return value
 
