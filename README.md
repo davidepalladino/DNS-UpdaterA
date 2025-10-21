@@ -1,38 +1,28 @@
 # DNS-UpdaterA
-This script provides a framework for managing DNS records across different providers. It's designed:
-- to be Docker-less, this is useful to have a lightweight solution.
-- with a modular architecture that allows you to easily add support for new DNS providers.
+This script provides a framework for managing DNS records across different providers. It's designed:  
+- to be a lightweight solution.  
+- with a modular architecture that allows you to easily add support for new DNS providers.  
 
 The current implementation includes support for Cloudflare.
 
 ## Features
-- **Provider-Agnostic Design:** The core logic for fetching the public IP and updating DNS records is abstracted, allowing easy integration with various DNS providers.
-- **Pluggable Providers:**  New DNS providers can be added by implementing a simple interface, without modifying the core logic. This is possible of Factory Method pattern.
-- **Robust Error Handling:** Comprehensive error handling for API requests, environment variables, and argument parsing.
-- **Detailed Logging:**  Logging with daily rotation and backups.
-- **Well-Documented Code:**  Docstrings for all classes and functions.
-- **Builder Pattern:**  Uses the Builder pattern for flexible environment configuration.
+- **Provider-Agnostic Design:** The core logic for fetching the public IP and updating DNS records is abstracted, allowing easy integration with various DNS providers.  
+- **Pluggable Providers:** New DNS providers can be added by implementing a simple interface, without modifying the core logic, using the Factory Method pattern.  
+- **Robust Error Handling:** Comprehensive error handling for API requests, environment variables, and argument parsing.  
+- **Detailed Logging:** Logging with daily rotation and backups.  
+- **Well-Documented Code:** Docstrings for all classes and functions.  
+- **Builder Pattern:** Uses the Builder pattern for flexible environment configuration.
 
 ## Requirements
-- Python 3.7 or higher.
-- The following Python modules:
-    - `requests`
-    - `python-dotenv`
-    - `logging`
-    - `typing`
-    - `ovh`
+- Python 3.7 or higher.  
+- Dependencies are managed via `pyproject.toml`.
 
-## Installation 
-1. Clone or download this repository.
-2. Install the required Python dependencies using `pip`:
-
-```bash
-pip install requests python-dotenv ovh
-```
-or
-```bash
-pip install -r requirements.txt 
-```
+## Installation
+1. Clone or download this repository.  
+2. Install the required dependencies using `uv`:
+    ```bash
+    uv install
+    ```
 3. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
 
 ### Configuration
