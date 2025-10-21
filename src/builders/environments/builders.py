@@ -4,9 +4,17 @@ from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
 from .environments import Environment, CloudflareEnvironment, OvhEnvironment
-from src.utils import ARG_CLOUDFLARE_ZONE_ID, ARG_NAME, \
-                        ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY, \
-                        ENV_OVH_ENDPOINT, ENV_OVH_APPLICATION_KEY, ENV_OVH_APPLICATION_SECRET, ENV_OVH_CONSUMER_KEY
+from src.utils import (
+    ARG_CLOUDFLARE_ZONE_ID,
+    ARG_NAME,
+    ENV_CLOUDFLARE_ZONE_ID,
+    ENV_CLOUDFLARE_EMAIL,
+    ENV_CLOUDFLARE_API_KEY,
+    ENV_OVH_ENDPOINT,
+    ENV_OVH_APPLICATION_KEY,
+    ENV_OVH_APPLICATION_SECRET,
+    ENV_OVH_CONSUMER_KEY,
+)
 
 
 class EnvironmentBuilder(ABC):
@@ -108,9 +116,9 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
 
         This method attempts to retrieve the necessary authentication details for a
         Cloudflare integration using a combination of runtime arguments and environment
-        variables. It prioritizes runtime arguments for the zone ID if provided. 
-        Otherwise, it falls back to predefined environmental variables. If any of the 
-        required details are missing, an exception is raised with information about the 
+        variables. It prioritizes runtime arguments for the zone ID if provided.
+        Otherwise, it falls back to predefined environmental variables. If any of the
+        required details are missing, an exception is raised with information about the
         missing variables.
 
         Args:
@@ -119,7 +127,7 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
 
         Raises:
             EnvironmentError
-                If any required variables (zone ID, email, or API key) are not set 
+                If any required variables (zone ID, email, or API key) are not set
                 in the environment or runtime arguments.
         """
         load_dotenv()
@@ -154,7 +162,9 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
         Returns:
             A CloudflareEnvironment instance.
         """
-        return CloudflareEnvironment(self._record_name, self._zone_id, self._email, self._api_key)
+        return CloudflareEnvironment(
+            self._record_name, self._zone_id, self._email, self._api_key
+        )
 
 
 class OvhEnvironmentBuilder(EnvironmentBuilder):
@@ -212,9 +222,15 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
 
     def make(self) -> OvhEnvironment:
         """
-         Creates and returns an OvhEnvironment instance.
+        Creates and returns an OvhEnvironment instance.
 
-         Returns:
-             An OvhEnvironment instance.
-         """
-        return OvhEnvironment(self._record_name, self._endpoint, self._application_key, self._application_secret, self._consumer_key)
+        Returns:
+            An OvhEnvironment instance.
+        """
+        return OvhEnvironment(
+            self._record_name,
+            self._endpoint,
+            self._application_key,
+            self._application_secret,
+            self._consumer_key,
+        )

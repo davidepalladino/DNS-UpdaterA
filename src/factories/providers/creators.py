@@ -14,7 +14,7 @@ class ProviderCreator(ABC):
     """
 
     @abstractmethod
-    def _make(self) :
+    def _make(self):
         """
         Abstract factory method to create a specific Provider instance.
 
@@ -50,10 +50,14 @@ class ProviderCreator(ABC):
         if record.get_ip() != public_ip:
             errors: list[str] = provider.update(record, public_ip)
             if len(errors) != 0:
-                raise Exception(f"Record update failed for {name} with these reasons: {errors}.")
+                raise Exception(
+                    f"Record update failed for {name} with these reasons: {errors}."
+                )
             return ResultUpdateDTO(True, f"Record updated successful for '{name}'.")
 
-        return ResultUpdateDTO(False, f"Record not updated for '{name}' because hasn't changed.")
+        return ResultUpdateDTO(
+            False, f"Record not updated for '{name}' because hasn't changed."
+        )
 
     def _get_public_ip(self) -> str:
         """
@@ -66,7 +70,7 @@ class ProviderCreator(ABC):
             requests.exceptions.RequestException: If there's an issue with the
               request to the ipify service.
         """
-        return get('https://api.ipify.org').content.decode('utf8')
+        return get("https://api.ipify.org").content.decode("utf8")
 
 
 class CloudflareProviderCreator(ProviderCreator):
@@ -107,7 +111,13 @@ class OvhProviderCreator(ProviderCreator):
     application_secret: str
     consumer_key: str
 
-    def __init__(self, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+    def __init__(
+        self,
+        endpoint: str,
+        application_key: str,
+        application_secret: str,
+        consumer_key: str,
+    ):
         """
         Initializes an OvhProviderCreator instance.
 
@@ -129,4 +139,9 @@ class OvhProviderCreator(ProviderCreator):
         Returns:
             An OvhProvider instance.
         """
-        return OvhProvider(self.endpoint, self.application_key, self.application_secret, self.consumer_key)
+        return OvhProvider(
+            self.endpoint,
+            self.application_key,
+            self.application_secret,
+            self.consumer_key,
+        )

@@ -34,10 +34,11 @@ def set_logger():
                 filename=f"{exec_path}/logs/main",
                 when="midnight",
                 interval=1,
-                backupCount=15
+                backupCount=15,
             )
-        ]
+        ],
     )
+
 
 def get_provider(args: list) -> str:
     """
@@ -56,7 +57,9 @@ def get_provider(args: list) -> str:
         if ARG_PROVIDER in args:
             provider = args[args.index(ARG_PROVIDER) + 1].lower()
             if provider.startswith("--"):
-                raise Exception(f"'{provider}' is not allowed for '{ARG_PROVIDER}' argument.")
+                raise Exception(
+                    f"'{provider}' is not allowed for '{ARG_PROVIDER}' argument."
+                )
             return provider
         else:
             raise Exception("You must provide a provider to update.")
@@ -64,7 +67,7 @@ def get_provider(args: list) -> str:
         raise Exception("You must provide a provider to update.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = sys.argv[1:]
 
     set_logger()
@@ -79,12 +82,23 @@ if __name__ == '__main__':
 
         if provider == "cloudflare":
             environment = director.make_cloudflare_environment(args)
-            creator = CloudflareProviderCreator(environment.get_zone_id(), environment.get_email(), environment.get_api_key())
+            creator = CloudflareProviderCreator(
+                environment.get_zone_id(),
+                environment.get_email(),
+                environment.get_api_key(),
+            )
         elif provider == "ovh":
             environment = director.make_ovh_environment(args)
-            creator = OvhProviderCreator(environment.get_endpoint(), environment.get_application_key(), environment.get_application_secret(), environment.get_consumer_key())
+            creator = OvhProviderCreator(
+                environment.get_endpoint(),
+                environment.get_application_key(),
+                environment.get_application_secret(),
+                environment.get_consumer_key(),
+            )
         else:
-            raise Exception(f"You must provide a valid provider to update, or {provider} is not covered yet.")
+            raise Exception(
+                f"You must provide a valid provider to update, or {provider} is not covered yet."
+            )
 
         update_result = creator.updateIfChanged(environment.get_record_name())
         Logger.info(update_result.get_reason())
