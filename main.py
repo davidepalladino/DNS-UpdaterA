@@ -3,10 +3,9 @@ import sys
 
 from logging.handlers import TimedRotatingFileHandler
 
-from builders.environments.director import EnvironmentDirector
-from consts.arguments import ARG_PROVIDER
-from factories.providers.creators import CloudflareProviderCreator, OvhProviderCreator
-from utils.logger import *
+from src.builders import EnvironmentDirector
+from src.factories import CloudflareProviderCreator, OvhProviderCreator
+from src.utils import Logger, ARG_PROVIDER
 
 
 def set_logger():

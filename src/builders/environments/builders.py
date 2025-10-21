@@ -3,10 +3,10 @@ import os
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
-from builders.environments.environments import CloudflareEnvironment, Environment, OvhEnvironment
-from consts.arguments import ARG_NAME, ARG_CLOUDFLARE_ZONE_ID
-from consts.environments import ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY, ENV_OVH_ENDPOINT, \
-    ENV_OVH_APPLICATION_KEY, ENV_OVH_APPLICATION_SECRET, ENV_OVH_CONSUMER_KEY
+from .environments import Environment, CloudflareEnvironment, OvhEnvironment
+from src.utils import ARG_CLOUDFLARE_ZONE_ID, ARG_NAME, \
+                        ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY, \
+                        ENV_OVH_ENDPOINT, ENV_OVH_APPLICATION_KEY, ENV_OVH_APPLICATION_SECRET, ENV_OVH_CONSUMER_KEY
 
 
 class EnvironmentBuilder(ABC):

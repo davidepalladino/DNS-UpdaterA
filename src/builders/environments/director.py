@@ -1,5 +1,5 @@
-from builders.environments.builders import CloudflareEnvironmentBuilder, OvhEnvironmentBuilder
-from builders.environments.environments import CloudflareEnvironment, OvhEnvironment
+from .environments import CloudflareEnvironment, OvhEnvironment
+from .builders import CloudflareEnvironmentBuilder, OvhEnvironmentBuilder
 
 
 class EnvironmentDirector:

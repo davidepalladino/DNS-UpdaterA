@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from factories.providers.dtos import ResultUpdateDTO
-from factories.providers.providers import Provider, CloudflareProvider, OvhProvider
+from .dtos import ResultUpdateDTO
+from .providers import Provider, CloudflareProvider, OvhProvider
 from requests import get
 
 

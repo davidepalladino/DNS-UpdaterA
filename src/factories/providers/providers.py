@@ -8,7 +8,7 @@ from typing import Union
 
 from ovh import Client
 
-from factories.providers.dtos import RecordDTO
+from .dtos import RecordDTO
 
 
 class Provider(ABC):
