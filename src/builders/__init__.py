@@ -1,1 +1,3 @@
-from .environments.director import *
+from .environments.director import EnvironmentDirector
+
+__all__ = ["EnvironmentDirector"]
