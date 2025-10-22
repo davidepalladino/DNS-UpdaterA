@@ -12,5 +12,17 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff>=0.14.1",
+    "mypy==1.18.*",
+    "ruff==0.14.*",
 ]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = "ovh.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "requests.*"
+ignore_missing_imports = true
