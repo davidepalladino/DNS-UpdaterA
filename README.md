@@ -19,14 +19,16 @@ The current implementation includes support for Cloudflare.
 
 ## Installation
 1. Clone or download this repository.  
-2. Install the required dependencies using `uv`:
+2. Install the required dependencies using `uv` under a Makefile:
    ```bash
-   uv sync
+   make setup
+   make sync
    ```
-   and:
+   If you want a clean setup:
    ```bash
-   uv lock
-   ``` 
+   make setup-clean
+   make sync
+   ```
 3. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
 
 ### Configuration
@@ -77,20 +79,19 @@ I suggest that you use [git-flow](https://danielkummer.github.io/git-flow-cheats
 ### Development Tools
 The project uses several development tools for code quality and type checking:
 
-1. Install development dependencies:
+1. Run Ruff for code linting:
     ```bash
-    uv pip install --group dev
+    make lint
     ```
 
-2. Run Ruff for code linting and formatting:
+2. Run Ruff for code formatting:
     ```bash
-    uv run ruff check .
-    uv run ruff format .
+    make format
     ```
-
-3. Run Mypy for static type checking:
+   
+3. Run mypy for static type checking:
     ```bash
-    uv run mypy main.py
+    make type-check
     ```
 
 It's recommended to run these tools before committing changes to ensure code quality and consistency.
