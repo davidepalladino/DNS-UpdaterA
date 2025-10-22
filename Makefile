@@ -1,11 +1,11 @@
-.PHONY: setup setup-clean sync lint format type-check build
+.PHONY: install install-clean sync lint format type-check build
 
 # Create or reuse the virtual environment
-setup:
+install:
 	uv venv --allow-existing
 
 # Remove the virtual environment
-setup-clean:
+install-clean:
 	uv venv -c
 
 # Sync dependencies from pyproject.toml

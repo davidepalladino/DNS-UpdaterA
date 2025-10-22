@@ -21,12 +21,12 @@ The current implementation includes support for Cloudflare.
 1. Clone or download this repository.  
 2. Install the required dependencies using `uv` under a Makefile:
    ```bash
-   make setup
+   make install
    make sync
    ```
-   If you want a clean setup:
+   If you want a clean installation:
    ```bash
-   make setup-clean
+   make install-clean
    make sync
    ```
 3. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
