@@ -8,7 +8,8 @@ from logging.handlers import TimedRotatingFileHandler
 
 from src.builders import EnvironmentDirector
 from src.factories import CloudflareProviderCreator, OvhProviderCreator
-from src.utils import Logger, ARG_PROVIDER
+from src.consts import ARG_PROVIDER
+from src.utils import Logger
 
 
 def set_logger():

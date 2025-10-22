@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
 from .environments import Environment, CloudflareEnvironment, OvhEnvironment
-from src.utils import (
+from src.consts import (
     ARG_CLOUDFLARE_ZONE_ID,
     ARG_NAME,
     ENV_CLOUDFLARE_ZONE_ID,
