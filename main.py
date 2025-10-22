@@ -6,8 +6,8 @@ import sys
 
 from logging.handlers import TimedRotatingFileHandler
 
-from src.builders import EnvironmentDirector
 from src.factories import CloudflareProviderCreator, OvhProviderCreator
+from src.builders import EnvironmentDirector, EnvironmentModel
 from src.consts import ARG_PROVIDER
 from src.utils import Logger
 
@@ -78,8 +78,8 @@ if __name__ == "__main__":
 
         director = EnvironmentDirector()
 
-        environment = None
-        creator = None
+        environment: EnvironmentModel
+        creator: ProviderCreator
 
         if provider == "cloudflare":
             environment = director.make_cloudflare_environment(args)

@@ -3,7 +3,7 @@ import os
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
-from .environments import Environment, CloudflareEnvironment, OvhEnvironment
+from .models import EnvironmentModel, CloudflareEnvironmentModel, OvhEnvironmentModel
 from src.consts import (
     ARG_CLOUDFLARE_ZONE_ID,
     ARG_NAME,
@@ -89,7 +89,7 @@ class EnvironmentBuilder(ABC):
         pass
 
     @abstractmethod
-    def make(self) -> Environment:  # Changed to return Environment
+    def make(self) -> EnvironmentModel:  # Changed to return Environment
         """
         Creates and returns an Environment instance.
 
@@ -155,14 +155,14 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
         if len(errors) > 0:
             raise EnvironmentError(f"Please set environment for: {', '.join(errors)}.")
 
-    def make(self) -> CloudflareEnvironment:
+    def make(self) -> CloudflareEnvironmentModel:
         """
         Creates and returns a CloudflareEnvironment instance.
 
         Returns:
             A CloudflareEnvironment instance.
         """
-        return CloudflareEnvironment(
+        return CloudflareEnvironmentModel(
             self._record_name, self._zone_id, self._email, self._api_key
         )
 
@@ -220,14 +220,14 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
         if len(errors) > 0:
             raise EnvironmentError(f"Please set environment for: {', '.join(errors)}.")
 
-    def make(self) -> OvhEnvironment:
+    def make(self) -> OvhEnvironmentModel:
         """
         Creates and returns an OvhEnvironment instance.
 
         Returns:
             An OvhEnvironment instance.
         """
-        return OvhEnvironment(
+        return OvhEnvironmentModel(
             self._record_name,
             self._endpoint,
             self._application_key,

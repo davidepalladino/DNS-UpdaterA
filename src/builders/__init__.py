@@ -1,3 +1,8 @@
-from .environments.director import EnvironmentDirector
+from typing import Union
 
-__all__ = ["EnvironmentDirector"]
+from .environments.director import EnvironmentDirector
+from .environments.models import CloudflareEnvironmentModel, OvhEnvironmentModel
+
+EnvironmentModel = Union[CloudflareEnvironmentModel, OvhEnvironmentModel]
+
+__all__ = ["EnvironmentDirector", "EnvironmentModel"]
