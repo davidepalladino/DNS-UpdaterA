@@ -10,7 +10,9 @@ class EnvironmentDirector:
     representation, allowing for different configurations to be built.
     """
 
-    def make_cloudflare_environment(self, args: list[str]) -> CloudflareEnvironmentModel:
+    def make_cloudflare_environment(
+        self, args: list[str]
+    ) -> CloudflareEnvironmentModel:
         """
         Constructs a CloudflareEnvironment object.
 

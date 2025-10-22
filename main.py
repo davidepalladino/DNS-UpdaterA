@@ -12,7 +12,7 @@ from src.consts import ARG_PROVIDER
 from src.utils import Logger
 
 
-def set_logger()-> None:
+def set_logger() -> None:
     """
     Sets up the logging configuration.
 
