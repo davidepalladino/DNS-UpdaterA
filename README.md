@@ -20,9 +20,13 @@ The current implementation includes support for Cloudflare.
 ## Installation
 1. Clone or download this repository.  
 2. Install the required dependencies using `uv`:
-    ```bash
-    uv install
-    ```
+   ```bash
+   uv sync
+   ```
+   and:
+   ```bash
+   uv lock
+   ``` 
 3. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
 
 ### Configuration
@@ -57,7 +61,7 @@ These `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET and `OVH_CONSUMER_KEY` coul
 ## Usage
 Run the script, specifying the provider and record name:
 ```bash
-python main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
+uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
 ```
 
 ## Adding New Providers (for developers)
@@ -67,10 +71,31 @@ The script is designed to be easily extensible. To add support for a new provide
 3. Update the `main.py` to recognize your new provider name.
 4. Create a new `EnvironmentBuilder` for the provider if it requires different configuration settings.
 
-Be free to open feature or bugfix branch, then a PR; I'm pleased to accept it!
-I suggest you to use [git-flow](https://danielkummer.github.io/git-flow-cheatsheet/).
+Be free to open a feature or bugfix branch, then a PR; I'm pleased to accept it!
+I suggest that you use [git-flow](https://danielkummer.github.io/git-flow-cheatsheet/).
 
-## Expected Output
+### Development Tools
+The project uses several development tools for code quality and type checking:
+
+1. Install development dependencies:
+    ```bash
+    uv pip install --group dev
+    ```
+
+2. Run Ruff for code linting and formatting:
+    ```bash
+    uv run ruff check .
+    uv run ruff format .
+    ```
+
+3. Run Mypy for static type checking:
+    ```bash
+    uv run mypy main.py
+    ```
+
+It's recommended to run these tools before committing changes to ensure code quality and consistency.
+
+### Expected Output Messages
 1. Record not found:
 ```
 [YYYY-MM-DD HH:MM:SS] - ERROR: Record '<record_name>' not found.
@@ -94,7 +119,7 @@ I suggest you to use [git-flow](https://danielkummer.github.io/git-flow-cheatshe
 - The public IP is fetched using the ipify API.
 - Logs are stored in the `logs` directory.
 - The Builder pattern is used for environment configuration.
-- The Factory Method pattern is used to add new provider.
+- The Factory Method pattern is used to add a new provider.
 - The code is well-documented.
  
 ## License
