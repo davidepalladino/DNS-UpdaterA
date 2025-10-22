@@ -12,7 +12,7 @@ from src.consts import ARG_PROVIDER
 from src.utils import Logger
 
 
-def set_logger():
+def set_logger()-> None:
     """
     Sets up the logging configuration.
 
@@ -41,7 +41,7 @@ def set_logger():
     )
 
 
-def get_provider(args: list) -> str:
+def get_provider(args: list[str]) -> str:
     """
     Gets the provider name from command-line arguments.
 

@@ -55,7 +55,7 @@ class CloudflareProvider(Provider):
 
     _connection = http.client.HTTPSConnection("api.cloudflare.com")
     _zone_id: str
-    _headers: dict
+    _headers: dict[str, str]
 
     def __init__(self, zone_id: str, email: str, api_key: str):
         """
@@ -123,9 +123,9 @@ class CloudflareProvider(Provider):
         )
 
         result = self._connection.getresponse()
-        data = json.loads(result.read().decode("utf-8"))
+        data: list[str] = json.loads(result.read().decode("utf-8"))["errors"]
 
-        return data["errors"]
+        return data
 
 
 class OvhProvider(Provider):

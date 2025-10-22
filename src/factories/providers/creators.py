@@ -14,7 +14,7 @@ class ProviderCreator(ABC):
     """
 
     @abstractmethod
-    def _make(self):
+    def _make(self) -> Provider:
         """
         Abstract factory method to create a specific Provider instance.
 
@@ -23,7 +23,7 @@ class ProviderCreator(ABC):
         """
         pass
 
-    def updateIfChanged(self, name) -> ResultUpdateDTO:
+    def updateIfChanged(self, name: str) -> ResultUpdateDTO:
         """
         Updates a DNS record if the public IP address has changed.
 
@@ -70,7 +70,8 @@ class ProviderCreator(ABC):
             requests.exceptions.RequestException: If there's an issue with the
               request to the ipify service.
         """
-        return get("https://api.ipify.org").content.decode("utf8")
+        ip: str = get("https://api.ipify.org").content.decode("utf8")
+        return ip
 
 
 class CloudflareProviderCreator(ProviderCreator):
