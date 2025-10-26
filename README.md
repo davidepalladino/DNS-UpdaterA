@@ -96,7 +96,7 @@ The project uses several development tools for code quality and type checking:
 
 It's recommended to run these tools before committing changes to ensure code quality and consistency.
 
-### Expected Output Messages
+## Expected Output Messages
 1. Record not found:
 ```
 [YYYY-MM-DD HH:MM:SS] - ERROR: Record '<record_name>' not found.
