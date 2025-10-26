@@ -4,7 +4,7 @@
 install:
 	uv venv --allow-existing
 
-# Remove the virtual environment
+# Create new virtual environment
 install-clean:
 	uv venv -c
 
