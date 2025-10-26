@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class Environment(ABC):
+class EnvironmentModel(ABC):
     """
     Abstract base class representing an environment configuration.
 
@@ -9,6 +9,7 @@ class Environment(ABC):
     specifically for retrieving the DNS record name.  Concrete subclasses
     will provide specific implementations for different environment setups.
     """
+
     _record_name: str
 
     def get_record_name(self) -> str:
@@ -21,7 +22,7 @@ class Environment(ABC):
         return self._record_name
 
 
-class CloudflareEnvironment(Environment):
+class CloudflareEnvironmentModel(EnvironmentModel):
     """
     Represents the environment configuration for interacting with Cloudflare.
 
@@ -77,7 +78,7 @@ class CloudflareEnvironment(Environment):
         return self._api_key
 
 
-class OvhEnvironment(Environment):
+class OvhEnvironmentModel(EnvironmentModel):
     """
     Represents the environment configuration for interacting with the OVH API.
 
@@ -92,7 +93,14 @@ class OvhEnvironment(Environment):
     _application_secret: str
     _consumer_key: str
 
-    def __init__(self, record_name: str, endpoint: str, application_key: str, application_secret: str, consumer_key: str):
+    def __init__(
+        self,
+        record_name: str,
+        endpoint: str,
+        application_key: str,
+        application_secret: str,
+        consumer_key: str,
+    ):
         """
         Initializes an OvhEnvironment instance.
 

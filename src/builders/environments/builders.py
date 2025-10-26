@@ -3,10 +3,18 @@ import os
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
-from builders.environments.environments import CloudflareEnvironment, Environment, OvhEnvironment
-from consts.arguments import ARG_NAME, ARG_CLOUDFLARE_ZONE_ID
-from consts.environments import ENV_CLOUDFLARE_ZONE_ID, ENV_CLOUDFLARE_EMAIL, ENV_CLOUDFLARE_API_KEY, ENV_OVH_ENDPOINT, \
-    ENV_OVH_APPLICATION_KEY, ENV_OVH_APPLICATION_SECRET, ENV_OVH_CONSUMER_KEY
+from .models import EnvironmentModel, CloudflareEnvironmentModel, OvhEnvironmentModel
+from src.consts import (
+    ARG_CLOUDFLARE_ZONE_ID,
+    ARG_NAME,
+    ENV_CLOUDFLARE_ZONE_ID,
+    ENV_CLOUDFLARE_EMAIL,
+    ENV_CLOUDFLARE_API_KEY,
+    ENV_OVH_ENDPOINT,
+    ENV_OVH_APPLICATION_KEY,
+    ENV_OVH_APPLICATION_SECRET,
+    ENV_OVH_CONSUMER_KEY,
+)
 
 
 class EnvironmentBuilder(ABC):
@@ -17,7 +25,7 @@ class EnvironmentBuilder(ABC):
 
     _record_name: str
 
-    def set_record_name(self, args: list):
+    def set_record_name(self, args: list[str]) -> None:
         """
         Sets the record name from command-line arguments.
 
@@ -38,7 +46,7 @@ class EnvironmentBuilder(ABC):
         except IndexError:
             raise Exception("You must provide a record name to update.")
 
-    def _get_arg(self, args: list, arg: str) -> str:
+    def _get_arg(self, args: list[str], arg: str) -> str:
         """
         Retrieves the value of a specific argument from a list of arguments. Checks if the argument
         is prefixed with "--" and raises an exception if it is. Returns the lowercased value of the
@@ -64,7 +72,7 @@ class EnvironmentBuilder(ABC):
         return value
 
     @abstractmethod
-    def set_authentication(self, args: list):
+    def set_authentication(self, args: list[str]) -> None:
         """
         Defines an abstract method for setting authentication, which should be
         implemented by any concrete subclass. This method is responsible for
@@ -81,7 +89,7 @@ class EnvironmentBuilder(ABC):
         pass
 
     @abstractmethod
-    def make(self) -> Environment:  # Changed to return Environment
+    def make(self) -> EnvironmentModel:  # Changed to return Environment
         """
         Creates and returns an Environment instance.
 
@@ -97,20 +105,20 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
     CloudflareEnvironment instances.
     """
 
-    _record_name = None
-    _zone_id = None
-    _email = None
-    _api_key = None
+    _record_name: str
+    _zone_id: str
+    _email: str
+    _api_key: str
 
-    def set_authentication(self, args: list):
+    def set_authentication(self, args: list[str]) -> None:
         """
         Sets authentication details by loading environment variables and arguments.
 
         This method attempts to retrieve the necessary authentication details for a
         Cloudflare integration using a combination of runtime arguments and environment
-        variables. It prioritizes runtime arguments for the zone ID if provided. 
-        Otherwise, it falls back to predefined environmental variables. If any of the 
-        required details are missing, an exception is raised with information about the 
+        variables. It prioritizes runtime arguments for the zone ID if provided.
+        Otherwise, it falls back to predefined environmental variables. If any of the
+        required details are missing, an exception is raised with information about the
         missing variables.
 
         Args:
@@ -119,42 +127,52 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
 
         Raises:
             EnvironmentError
-                If any required variables (zone ID, email, or API key) are not set 
+                If any required variables (zone ID, email, or API key) are not set
                 in the environment or runtime arguments.
         """
         load_dotenv()
 
-        errors: list = []
+        errors: list[str] = []
+        zone_id: str | None = None
 
         if ARG_CLOUDFLARE_ZONE_ID in args:
             try:
-                self._zone_id = self._get_arg(args, ARG_CLOUDFLARE_ZONE_ID)
+                zone_id = self._get_arg(args, ARG_CLOUDFLARE_ZONE_ID)
             except IndexError:
                 raise Exception("You must provide a valid Cloudflare Zone ID.")
         else:
-            self._zone_id = os.getenv(ENV_CLOUDFLARE_ZONE_ID)
-        if self._zone_id is None:
+            zone_id = os.getenv(ENV_CLOUDFLARE_ZONE_ID)
+
+        if zone_id is None:
             errors.append(ENV_CLOUDFLARE_ZONE_ID)
+        else:
+            self._zone_id = zone_id
 
-        self._email = os.getenv(ENV_CLOUDFLARE_EMAIL)
-        if self._email is None:
+        email = os.getenv(ENV_CLOUDFLARE_EMAIL)
+        if email is None:
             errors.append(ENV_CLOUDFLARE_EMAIL)
+        else:
+            self._email = email
 
-        self._api_key = os.getenv(ENV_CLOUDFLARE_API_KEY)
-        if self._api_key is None:
+        api_key = os.getenv(ENV_CLOUDFLARE_API_KEY)
+        if api_key is None:
             errors.append(ENV_CLOUDFLARE_API_KEY)
+        else:
+            self._api_key = api_key
 
         if len(errors) > 0:
             raise EnvironmentError(f"Please set environment for: {', '.join(errors)}.")
 
-    def make(self) -> CloudflareEnvironment:
+    def make(self) -> CloudflareEnvironmentModel:
         """
         Creates and returns a CloudflareEnvironment instance.
 
         Returns:
             A CloudflareEnvironment instance.
         """
-        return CloudflareEnvironment(self._record_name, self._zone_id, self._email, self._api_key)
+        return CloudflareEnvironmentModel(
+            self._record_name, self._zone_id, self._email, self._api_key
+        )
 
 
 class OvhEnvironmentBuilder(EnvironmentBuilder):
@@ -168,7 +186,7 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
     _application_secret: str
     _consumer_key: str
 
-    def set_authentication(self, args: list):
+    def set_authentication(self, args: list[str]) -> None:
         """
         Sets the authentication for the application by loading required environment
         variables. This method validates the presence of mandatory environment variables
@@ -189,32 +207,46 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
         """
         load_dotenv()
 
-        errors: list = []
+        errors: list[str] = []
 
-        self._endpoint = os.getenv(ENV_OVH_ENDPOINT)
-        if self._endpoint is None:
+        endpoint = os.getenv(ENV_OVH_ENDPOINT)
+        if endpoint is None:
             errors.append(ENV_OVH_ENDPOINT)
+        else:
+            self._endpoint = endpoint
 
-        self._application_key = os.getenv(ENV_OVH_APPLICATION_KEY)
-        if self._application_key is None:
+        application_key = os.getenv(ENV_OVH_APPLICATION_KEY)
+        if application_key is None:
             errors.append(ENV_OVH_APPLICATION_KEY)
+        else:
+            self._application_key = application_key
 
-        self._application_secret = os.getenv(ENV_OVH_APPLICATION_SECRET)
-        if self._application_secret is None:
+        application_secret = os.getenv(ENV_OVH_APPLICATION_SECRET)
+        if application_secret is None:
             errors.append(ENV_OVH_APPLICATION_SECRET)
+        else:
+            self._application_secret = application_secret
 
-        self._consumer_key = os.getenv(ENV_OVH_CONSUMER_KEY)
-        if self._consumer_key is None:
+        consumer_key = os.getenv(ENV_OVH_CONSUMER_KEY)
+        if consumer_key is None:
             errors.append(ENV_OVH_CONSUMER_KEY)
+        else:
+            self._consumer_key = consumer_key
 
         if len(errors) > 0:
             raise EnvironmentError(f"Please set environment for: {', '.join(errors)}.")
 
-    def make(self) -> OvhEnvironment:
+    def make(self) -> OvhEnvironmentModel:
         """
-         Creates and returns an OvhEnvironment instance.
+        Creates and returns an OvhEnvironment instance.
 
-         Returns:
-             An OvhEnvironment instance.
-         """
-        return OvhEnvironment(self._record_name, self._endpoint, self._application_key, self._application_secret, self._consumer_key)
+        Returns:
+            An OvhEnvironment instance.
+        """
+        return OvhEnvironmentModel(
+            self._record_name,
+            self._endpoint,
+            self._application_key,
+            self._application_secret,
+            self._consumer_key,
+        )

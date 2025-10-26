@@ -1,3 +1,6 @@
 .env
 logs/*
 .idea
+uv.lock
+dist
+src/DNS_UpdaterA.egg-info

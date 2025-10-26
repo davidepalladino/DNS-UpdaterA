@@ -1,3 +1,0 @@
-python-dotenv~=0.21.0
-requests~=2.32.3
-ovh~=1.2.0

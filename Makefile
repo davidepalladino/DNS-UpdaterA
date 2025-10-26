@@ -1,0 +1,29 @@
+.PHONY: install install-clean sync lint format type-check build
+
+# Create or reuse the virtual environment
+install:
+	uv venv --allow-existing
+
+# Create new virtual environment
+install-clean:
+	uv venv -c
+
+# Sync dependencies from pyproject.toml
+sync: pyproject.toml
+	uv sync
+
+# Run Ruff for linting
+lint:
+	uvx ruff check .
+
+# Run Ruff for auto-formatting
+format:
+	uvx ruff format .
+
+# Run type checking with mypy
+type-check:
+	uvx mypy main.py
+
+# Build the project (wheel/sdist)
+build:
+	uv build

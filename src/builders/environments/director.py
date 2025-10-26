@@ -1,5 +1,5 @@
-from builders.environments.builders import CloudflareEnvironmentBuilder, OvhEnvironmentBuilder
-from builders.environments.environments import CloudflareEnvironment, OvhEnvironment
+from .models import CloudflareEnvironmentModel, OvhEnvironmentModel
+from .builders import CloudflareEnvironmentBuilder, OvhEnvironmentBuilder
 
 
 class EnvironmentDirector:
@@ -10,7 +10,9 @@ class EnvironmentDirector:
     representation, allowing for different configurations to be built.
     """
 
-    def make_cloudflare_environment(self, args: list) -> CloudflareEnvironment:
+    def make_cloudflare_environment(
+        self, args: list[str]
+    ) -> CloudflareEnvironmentModel:
         """
         Constructs a CloudflareEnvironment object.
 
@@ -29,7 +31,7 @@ class EnvironmentDirector:
         builder.set_authentication(args)
         return builder.make()
 
-    def make_ovh_environment(self, args: list) -> OvhEnvironment:
+    def make_ovh_environment(self, args: list[str]) -> OvhEnvironmentModel:
         """
         Constructs an OvhEnvironment object.
 
