@@ -1,5 +1,5 @@
 # This file is necessary for Docker. Two simple rules:
-# 1. rename this from ".cron" into "cron".
+# 1. rename this from "cron.example" into "cron".
 # 2. consider the scheme below for your cron entries:
 #    * * * * * root cd /app && /usr/local/bin/uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
 #
