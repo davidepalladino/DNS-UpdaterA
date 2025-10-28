@@ -1,0 +1,8 @@
+services:
+  dns-updater-a:
+    container_name: dns-updater-a
+    image: dns-updater-a:latest
+    build:
+      context: .
+    volumes:
+      - ./logs:/app/logs
