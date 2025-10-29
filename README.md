@@ -3,7 +3,7 @@ This script provides a framework for managing DNS records across different provi
 - to be a lightweight solution.  
 - with a modular architecture that allows you to easily add support for new DNS providers.  
 
-The current implementation includes support for Cloudflare.
+The current implementation includes support for OVH and Cloudflare.
 
 ## Features
 - **Provider-Agnostic Design:** The core logic for fetching the public IP and updating DNS records is abstracted, allowing easy integration with various DNS providers.  
@@ -12,29 +12,65 @@ The current implementation includes support for Cloudflare.
 - **Detailed Logging:** Logging with daily rotation and backups.  
 - **Well-Documented Code:** Docstrings for all classes and functions.  
 - **Builder Pattern:** Uses the Builder pattern for flexible environment configuration.
-
-## Requirements
-- Python 3.7 or higher.  
-- Dependencies are managed via `pyproject.toml`.
+- **Docker Support:** Docker Compose file for easy deployment.
 
 ## Installation
+### Standalone
+#### Requirements
+- [UV](https://docs.astral.sh/uv/getting-started/installation/).
+- Makefile (only for Linux and MacOS).
+- Dependencies are managed via `pyproject.toml`.
+
+#### Steps
 1. Clone or download this repository.  
-2. Install the required dependencies using `uv` under a Makefile:
-   ```bash
-   make install
-   make sync
-   ```
-   If you want a clean installation:
-   ```bash
-   make install-clean
-   make sync
-   ```
+2. Install the required dependencies using `uv`:
+   2.1. If you are using Linux or MacOS: 
+        ```bash
+        make install
+        make sync
+        ```
+        Instead, for a clean installation:
+        ```bash
+        make install-clean
+        make sync
+        ```
+   2.2. If you are using Windows (please, change OS):
+        ```bash
+        uv venv --allow-existing
+       	uv sync
+        ```
+        Instead, for a clean installation:
+        ```bash
+        uv venv -c
+       	uv sync
+        ```        
 3. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
 
-### Configuration
-The configuration process depends on the chosen DNS provider. The script uses environment variables for authentication and other provider-specific settings.
+#### Usage
+Run the script, specifying the provider and record name:
+```bash
+uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
+```
 
-#### Cloudflare Configuration
+### Docker
+#### Requirements
+- [Docker and Docker Compose](https://docs.docker.com/get-started/).
+
+#### Steps
+1. Clone or download this repository.
+2. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
+3. Crate your cron file(s) (see `crontab.example`) under `cron` folder.
+4. Build by using Docker Compose:
+   ```bash
+   docker compose up -d
+   ```
+#### `docker-compose.yml`
+Into `docker-compose.yml` you can bind the `logs` folder to a specific host folder. The default is `./logs`.
+
+## Configuration
+The configuration process depends on the chosen DNS provider. The script uses environment variables (under `.env` file) for authentication and other provider-specific settings.
+
+### Cloudflare Configuration
 ```env
 CLOUDFLARE_ZONE_ID=your_zone_id
 CLOUDFLARE_EMAIL=your_cloudflare_email
@@ -46,7 +82,7 @@ CLOUDFLARE_API_KEY=your_cloudflare_api_key
 
 **Note**: `CLOUDFLARE_ZONE_ID` can be passed as the argument `zone-id`. In this case, it takes priority over the environment variable."
 
-#### OVH Configuration
+### OVH Configuration
 ```env
 OVH_ENDPOINT=your_endpoint
 OVH_APPLICATION_KEY=your_application_key
@@ -60,13 +96,8 @@ OVH_CONSUMER_KEY=your_consumer_key
 
 These `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET and `OVH_CONSUMER_KEY` could be created by [creation page](https://api.ovh.com/createToken/index.cgi?GET=/*&PUT=/*&POST=/*&DELETE=/*).
 
-## Usage
-Run the script, specifying the provider and record name:
-```bash
-uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
-```
-
-## Adding New Providers (for developers)
+## Development
+### Adding New Providers
 The script is designed to be easily extensible. To add support for a new provider:
 1. Create a new class that inherits from `Provider` (defined in `factories/providers/providers.py`). Implement the `get` and `update` methods to interact with the new provider's API.
 2. Create a corresponding `ProviderCreator` class (inheriting from `factories/providers/creators.py`) to create instances of your new provider class.
@@ -96,7 +127,7 @@ The project uses several development tools for code quality and type checking:
 
 It's recommended to run these tools before committing changes to ensure code quality and consistency.
 
-## Expected Output Messages
+## Log - Expected Output Messages
 1. Record not found:
 ```
 [YYYY-MM-DD HH:MM:SS] - ERROR: Record '<record_name>' not found.
