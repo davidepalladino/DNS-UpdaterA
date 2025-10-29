@@ -1,5 +1,5 @@
 # This file is necessary for Docker. Two simple rules:
-# 1. copy this into "cron".
+# 1. copy this into "cron" root folder with the name as you wish.
 # 2. consider the scheme below for your cron entries:
 #    * * * * * root cd /app && /usr/local/bin/uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare_zone_id>]
 #
