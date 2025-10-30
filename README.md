@@ -66,6 +66,7 @@ uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare
    ```
 #### `docker-compose.yml`
 Into `docker-compose.yml` you can bind the `logs` folder to a specific host folder. The default is `./logs`.
+Also, you can set the environment variables in the `environment` section. These variables take precedence over the `.env` file.
 
 ## Configuration
 The configuration process depends on the chosen DNS provider. The script uses environment variables (under `.env` file) for authentication and other provider-specific settings.
