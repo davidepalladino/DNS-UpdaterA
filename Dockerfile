@@ -15,4 +15,7 @@ RUN apt-get update && \
     rm -rf cron && \
     make install && make sync
 
+# Copying environments variables into /etc/environment for using them from cron
+ENTRYPOINT ["/bin/sh", "-c", "printenv | awk -F= '{printf \"%s=\\\"%s\\\"\\n\",$1,$2}' | sed 's/\\\"\\\"/\\\"/g' | sort -u > /etc/environment && exec \"$0\" \"$@\"", "cron", "-f"]
+
 CMD ["cron", "-f"]
