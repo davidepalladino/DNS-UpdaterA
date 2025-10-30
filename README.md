@@ -44,7 +44,7 @@ The current implementation includes support for OVH and Cloudflare.
         uv venv -c
        	uv sync
         ```        
-3. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
+3. Create a `.env` file in the root directory with the required environment variables as described in the Configuration section.
 
 #### Usage
 Run the script, specifying the provider and record name:
@@ -58,8 +58,8 @@ uv run main.py --provider <provider> --name <record_name> [--zone-id <cloudflare
 
 #### Steps
 1. Clone or download this repository.
-2. Create a `.env` file in the script directory with the required environment variables as described in the Configuration section.
-3. Crate your cron file(s) (see `crontab.example`) under `cron` folder.
+2. Create a `.env` file in the root directory with the required environment variables as described in the Configuration section. Otherwise, you can set the same desired variables in the `docker-compose.yml` file. 
+3. Create your cron file(s) (see `crontab.example`) under `cron` folder.
 4. Build by using Docker Compose:
    ```bash
    docker compose up -d
@@ -69,7 +69,8 @@ Into `docker-compose.yml` you can bind the `logs` folder to a specific host fold
 Also, you can set the environment variables in the `environment` section. These variables take precedence over the `.env` file.
 
 ## Configuration
-The configuration process depends on the chosen DNS provider. The script uses environment variables (under `.env` file) for authentication and other provider-specific settings.
+The configuration process depends on the chosen DNS provider. The script uses environment variables for authentication and other provider-specific settings.
+As described in the Installation section, you can create a `.env` file in the root directory or set the same variables in the `docker-compose.yml` file.
 
 ### Cloudflare Configuration
 ```env
