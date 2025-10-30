@@ -24,7 +24,7 @@ The current implementation includes support for OVH and Cloudflare.
 #### Steps
 1. Clone or download this repository.  
 2. Install the required dependencies using `uv`:
-   2.1. If you are using Linux or MacOS: 
+   1. If you are using Linux or MacOS: 
         ```bash
         make install
         make sync
@@ -34,7 +34,7 @@ The current implementation includes support for OVH and Cloudflare.
         make install-clean
         make sync
         ```
-   2.2. If you are using Windows (please, change OS):
+   2. If you are using Windows (please, change OS):
         ```bash
         uv venv --allow-existing
        	uv sync
