@@ -4,5 +4,16 @@ services:
     image: dns-updater-a:latest
     build:
       context: .
+    environment:
+      # Cloudflare variables
+      CLOUDFLARE_ZONE_ID: yourZoneId
+      CLOUDFLARE_API_KEY: yourGlobalApiKey
+      CLOUDFLARE_EMAIL: yourEmail
+
+      #OVH variables
+      OVH_ENDPOINT: yourEndpoint
+      OVH_APPLICATION_KEY: yourApplicationKey
+      OVH_APPLICATION_SECRET: yourApplicationSecret
+      OVH_CONSUMER_KEY: yourConsumerKey
     volumes:
       - ./logs:/app/logs
