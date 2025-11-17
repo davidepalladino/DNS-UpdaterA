@@ -1,7 +1,7 @@
 import os
 
 from abc import ABC, abstractmethod
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 from .models import EnvironmentModel, CloudflareEnvironmentModel, OvhEnvironmentModel
 from src.consts import (
@@ -40,31 +40,47 @@ class EnvironmentBuilder(ABC):
         """
         try:
             if ARG_NAME in args:
-                self._record_name = self._get_arg(args, ARG_NAME)
+                self._record_name = self._get_program_arg(args, ARG_NAME)
             else:
                 raise Exception("You must provide a record name to update.")
         except IndexError:
             raise Exception("You must provide a record name to update.")
 
-    def _get_arg(self, args: list[str], arg: str) -> str:
+    def _load_environments(self) -> None:
         """
-        Retrieves the value of a specific argument from a list of arguments. Checks if the argument
-        is prefixed with "--" and raises an exception if it is. Returns the lowercased value of the
-        specified argument.
+        Loads environment variables from a .env file and sets them in the system environment.
 
-        Parameters:
-        args: list
-            A list of arguments to process.
-        arg: str
-            The specific argument to locate and retrieve its associated value.
+        Summary:
+        This method retrieves key-value pairs from a .env file using `dotenv_values`,
+        and sets them in the environment variables of the system only if they are not
+        already set.
 
         Raises:
-        Exception
-            If the specified argument starts with "--".
+            None
 
         Returns:
-        str
-            The lowercased value associated with the specified argument.
+            None
+        """
+        for key, value in dotenv_values().items():
+            os.environ.setdefault(key, value)
+
+    def _get_program_arg(self, args: list[str], arg: str) -> str:
+        """
+        Retrieves the value of a specified program argument from the provided list of arguments.
+
+        The function searches for the specified argument in the list and retrieves its corresponding value.
+        The value is converted to lowercase before being returned. An exception is raised if the detected
+        value starts with '--', as such a string is considered invalid for the specified argument.
+
+        Parameters:
+            args (list[str]): List of command-line argument strings.
+            arg (str): The argument whose associated value should be retrieved.
+
+        Returns:
+            str: The value associated with the specified argument in the list.
+
+        Raises:
+            Exception: If the retrieved value starts with '--', indicating an invalid format.
         """
         value: str = args[args.index(arg) + 1].lower()
         if value.startswith("--"):
@@ -112,32 +128,33 @@ class CloudflareEnvironmentBuilder(EnvironmentBuilder):
 
     def set_authentication(self, args: list[str]) -> None:
         """
-        Sets authentication details by loading environment variables and arguments.
+        Sets authentication details required for accessing Cloudflare API by
+        loading environment variables or processing command-line arguments.
 
-        This method attempts to retrieve the necessary authentication details for a
-        Cloudflare integration using a combination of runtime arguments and environment
-        variables. It prioritizes runtime arguments for the zone ID if provided.
-        Otherwise, it falls back to predefined environmental variables. If any of the
-        required details are missing, an exception is raised with information about the
-        missing variables.
+        This method first loads the environment variables. Then, it attempts
+        to retrieve the necessary Cloudflare credentials (Zone ID, Email, and
+        API key) either from the provided command-line arguments or
+        environment variables. If any required credential is missing, an
+        appropriate error is raised.
 
         Args:
-            args: list
-                A list of arguments to extract authentication details.
+            args: A list of command-line arguments to check for specific
+                  credentials.
 
         Raises:
-            EnvironmentError
-                If any required variables (zone ID, email, or API key) are not set
-                in the environment or runtime arguments.
+            Exception: If the provided arguments do not include a valid
+                       Cloudflare Zone ID when expected.
+            EnvironmentError: If one or more required environment variables
+                              are not set.
         """
-        load_dotenv()
+        self._load_environments()
 
         errors: list[str] = []
         zone_id: str | None = None
 
         if ARG_CLOUDFLARE_ZONE_ID in args:
             try:
-                zone_id = self._get_arg(args, ARG_CLOUDFLARE_ZONE_ID)
+                zone_id = self._get_program_arg(args, ARG_CLOUDFLARE_ZONE_ID)
             except IndexError:
                 raise Exception("You must provide a valid Cloudflare Zone ID.")
         else:
@@ -188,24 +205,18 @@ class OvhEnvironmentBuilder(EnvironmentBuilder):
 
     def set_authentication(self, args: list[str]) -> None:
         """
-        Sets the authentication for the application by loading required environment
-        variables. This method validates the presence of mandatory environment variables
-        and raises an exception if any of them are missing.
+        Sets up authentication parameters by loading environment variables required for OVH API interaction.
 
-        Raises
-        ------
-        EnvironmentError
-            Indicates that required environment variables are not set. A list of the
-            missing variables is provided in the error message.
+        This method attempts to load necessary credentials from environment variables. If any of the required
+        variables are missing, it raises an exception to notify the user.
 
-        Parameters
-        ----------
-        args : list
-            A list of arguments. Note: This parameter is not utilized in the function
-            but may be reserved for future use or required to match a specific method
-            signature.
+        Parameters:
+            args (list[str]): Additional arguments to process, currently unused.
+
+        Raises:
+            EnvironmentError: Raised if any required environment variables are not set.
         """
-        load_dotenv()
+        self._load_environments()
 
         errors: list[str] = []
 

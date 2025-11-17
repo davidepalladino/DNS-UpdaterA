@@ -1,0 +1,15 @@
+.git
+.github
+.idea
+dist
+logs
+
+.dockerignore
+.gitignore
+.env.example
+
+cron.example
+docker-compose.yml
+Dockerfile
+README.md
+uv.lock

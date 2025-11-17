@@ -1,6 +1,10 @@
-.env
-logs/*
 .idea
-uv.lock
+
+cron
 dist
+logs
 src/DNS_UpdaterA.egg-info
+
+uv.lock
+
+.env
